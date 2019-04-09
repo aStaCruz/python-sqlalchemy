@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome</title>
+
+    <!-- Bootstrap 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">-->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='aww.css') }}">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  </head>
+  <body>
+    <h1>All submitted requests</h1>
+
+    {% for request in requests %}
+    <button class="accordion">{{ request.title }}</button>
+    <div class="panel">
+      <form method="post" accept-charset="UTF-8" class="contact-form">
+      <input type="hidden" name="form_type" value="contact">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="row-id" value="{{ request.id }}">
+
+
+      <label for="title">Title: </label>
+      <input type="text" name="title" value="{{ request.title }}">
+
+      <label for="client">Client</label>
+      <select name="client">
+        <option value="Client A" {% if request.client == "Client A" %}selected{% endif %}>Client A</option>
+        <option value="Client B" {% if request.client == "Client B" %}selected{% endif %}>Client B</option>
+        <option value="Client C" {% if request.client == "Client C" %}selected{% endif %}>Client C</option>
+      </select>
+
+      <label for="clientPriority">Client Priority</label>
+      <input type="number" min="1" pattern="\d*" name="clientPriority" value="{{ request.clientPriority }}">
+      
+      <label for="productArea">Product Area</label>
+      <select name="productArea">
+        <option value="Policies" {% if request.productArea == "Policies" %}selected{% endif %}>Policies</option>
+        <option value="Billing" {% if request.productArea == "Billing" %}selected{% endif %}>Billing</option>
+        <option value="Claims" {% if request.productArea == "Claims" %}selected{% endif %}>Claims</option>
+        <option value="Reports" {% if request.productArea == "Reports" %}selected{% endif %}>Reports</option>
+      </select>
+
+      <label for="targetDate">Target Date</label>
+      <input type="date" name="targetDate" value="{{ request.targetDate }}" min="" max="">
+      
+      <label for="description">Description</label>
+      <textarea rows="15" cols="90" name="description">{{ request.description }}</textarea>
+      
+      <input class="update button" type="button" value="Update">
+      <input class="delete button" type="button" value="Delete">
+      </form>
+    </div>
+    {% endfor %}
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+  <script>
+    $(function () {
+      $('.update.button').each(function () {
+        $(this).click(function(){
+            console.log($(this).closest('.contact-form'));
+            $.ajax({
+                url:'/update',
+                type:'POST',
+                data: $(this).closest('.contact-form').serialize(),
+                success:function(){
+                  location.reload();
+                }
+            });
+        });
+      });
+      $('.delete.button').each(function () {
+        $(this).click(function(){
+            console.log($(this).closest('.contact-form'));
+            $.ajax({
+                url:'/delete',
+                type:'POST',
+                data: $(this).closest('.contact-form').serialize(),
+                success:function(){
+                  location.reload();
+                }
+            });
+        });
+      });
+
+      var acc = document.getElementsByClassName("accordion");
+      var i;
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          if (panel.style.maxHeight){
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          } 
+        });
+      }
+
+    });
+  </script>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Feature Request - Web App</title>
+
+    <!-- Bootstrap 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">-->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='aww.css') }}">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+
+    <div>
+      <form method="post" action="/send_request" id="contact_form" accept-charset="UTF-8" class="contact-form">
+          <input type="hidden" name="form_type" value="contact">
+          <input type="hidden" name="utf8" value="✓">
+
+          <p>
+            <input type="text" id="title" name="title" placeholder="Title">
+          </p>
+
+          <p>
+            <select id="client" name="client">
+              <option value="Client A">Client A</option>
+              <option value="Client B">Client B</option>
+              <option value="Client C">Client C</option>
+            </select>
+
+          </p>
+
+          <p>
+            <input type="number" min="1" pattern="\d*" id="clientPriority" name="clientPriority" placeholder="Client Priority">
+          </p> 
+
+          <p>
+            <select id="productArea" name="productArea">
+              <option value="Policies">Policies</option>
+              <option value="Billing">Billing</option>
+              <option value="Claims">Claims</option>
+              <option value="Reports">Reports</option>
+            </select>
+          </p>
+
+          <p>
+            <input type="date" id="targetDate" name="targetDate" value="2019-03-25" min="" max="">
+          </p>
+
+          <p>
+            <textarea rows="15" cols="90" id="description" name="description" placeholder="Description"></textarea>
+          </p>
+
+          <p>
+            <input type="submit" id="contactFormSubmit" class="secondary button" value="Add Feature Request">
+          </p>
+
+      </form>
+      <label id="response"></label>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  </body>
+  <script>
+    $(function () {
+      $('#contact_form').submit(function(e){
+          e.preventDefault();
+          $.ajax({
+              url:'/send_request',
+              type:'POST',
+              data:$('#contact_form').serialize(),
+              success:function(){
+                  $('#response').text('success');
+              }
+          });
+      });
+    });
+  </script>
+</html>
